@@ -50,7 +50,8 @@
       @pagination="getList" />
 
     <el-dialog :title="formTitle" :visible.sync="dialogFormVisible">
-      <el-form :inline="true" :model="productForm" :rules="rules" ref="productForm" label-width="100px" class="demo-productForm">
+      <el-form :inline="false" :model="productForm" :rules="rules" ref="productForm" label-width="100px"
+        class="demo-productForm">
         <el-form-item label="商品名称" prop="name" required>
           <el-input v-model="productForm.name"></el-input>
         </el-form-item>
@@ -60,23 +61,17 @@
         <el-form-item label="单价" prop="price">
           <el-input v-model="productForm.price"></el-input>
         </el-form-item>
-        <el-form-item label="品牌">
-          <el-select v-model="productForm.brandId" placeholder="请选择活动区域">
-            <el-option label="区域一" value="shanghai"></el-option>
-            <el-option label="区域二" value="beijing"></el-option>
+        <el-form-item label="品牌" prop="brandId">
+          <el-cascader :options="brandTreeData" :show-all-levels="false" @change="getBrand"
+            :props="{checkStrictly: true, label: 'name', value: 'id'}" clearable></el-cascader>
+        </el-form-item>
+        <el-form-item label="属性" prop="attributes">
+          <el-select v-model="productForm.attributes" multiple placeholder="请选择商品属性">
+            <el-option v-for="item in attributeList" :key="item.id" :label="item.name" :value="item.id"></el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="品类">
-          <el-select v-model="productForm.brandId" placeholder="请选择活动区域">
-            <el-option label="区域一" value="shanghai"></el-option>
-            <el-option label="区域二" value="beijing"></el-option>
-          </el-select>
-        </el-form-item>
-        <el-form-item label="属性">
-          <el-select v-model="productForm.attributes" placeholder="请选择活动区域">
-            <el-option label="区域一" value="shanghai"></el-option>
-            <el-option label="区域二" value="beijing"></el-option>
-          </el-select>
+        <el-form-item label="图片" prop="imageUrls" style="margin-bottom: 30px;">
+          <upload-image v-model="productForm.images" />
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -89,14 +84,16 @@
 
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator'
-import { productList } from '@/api/product'
-import { Product } from '@/types/product'
+import { productList, brandTree, getAttributeList } from '@/api/product'
+import { Product, Brand, Attribute } from '@/types/product'
 import Pagination from '@/components/Pagination/index.vue'
+import UploadImage from '@/components/UploadImage/index.vue'
 
 @Component({
   name: 'ArticleList',
   components: {
-    Pagination
+    Pagination,
+    UploadImage
   }
 })
 export default class extends Vue {
@@ -110,35 +107,48 @@ export default class extends Vue {
     limit: 20
   }
 
+  private brandTreeData: Brand[] = []
+  private attributeList: Attribute[] = []
   private productForm: Product = {}
 
   private rules = {
     name: [
-      { required: true, message: '请输入活动名称', trigger: 'blur' },
+      { required: true, message: '请输入商品名称', trigger: 'blur' },
       { min: 3, max: 5, message: '长度在 3 到 5 个字符', trigger: 'blur' }
     ],
-    region: [
-      { required: true, message: '请选择活动区域', trigger: 'change' }
+    unit: [
+      { required: true, message: '请输入商品单位', trigger: 'blur' }
     ],
-    date1: [
-      { type: 'date', required: true, message: '请选择日期', trigger: 'change' }
+    price: [
+      { required: true, message: '请输入商品单价', trigger: 'blur' },
+      { min: 3, message: '单价必须大于0', trigger: 'change' }
     ],
-    date2: [
-      { type: 'date', required: true, message: '请选择时间', trigger: 'change' }
+    brandId: [
+      { required: true, message: '请选择品牌', trigger: 'change' }
     ],
-    type: [
-      { type: 'array', required: true, message: '请至少选择一个活动性质', trigger: 'change' }
-    ],
-    resource: [
-      { required: true, message: '请选择活动资源', trigger: 'change' }
-    ],
-    desc: [
-      { required: true, message: '请填写活动形式', trigger: 'blur' }
+    attributes: [
+      { required: true, message: '请至少选择一个商品属性', trigger: 'change' }
     ]
   }
 
   created() {
     this.getList()
+    this.getBrandTree()
+    this.getAttributeList()
+  }
+
+  // 获取品牌列表
+  private async getBrandTree() {
+    const { data } = await brandTree()
+    this.brandTreeData = data
+    console.log('getBrandTree', this.brandTreeData)
+  }
+
+  // 获取属性列表
+  private async getAttributeList() {
+    const { data } = await getAttributeList()
+    this.attributeList = data
+    console.log('attributeList', this.attributeList)
   }
 
   // 获取列表
@@ -163,12 +173,18 @@ export default class extends Vue {
     this.dialogFormVisible = true
   }
 
+  getBrand(data: Array<number>) {
+    this.productForm.brandId = data[data.length - 1]
+    console.log(this.productForm.brandId)
+  }
+
   cancel() {
     this.dialogFormVisible = false
     this.productForm = {}
   }
 
   submit() {
+    console.log(this.productForm)
     this.$refs.productForm.validate((valid: any) => {
       if (valid) {
         alert('submit!')

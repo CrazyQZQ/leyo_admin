@@ -1,44 +1,25 @@
 <template>
   <div class="upload-container">
-    <el-upload
-      :data="dataObj"
-      :multiple="false"
-      :show-file-list="false"
-      :on-success="handleImageSuccess"
-      class="image-uploader"
-      drag
-      action="https://httpbin.org/post"
-    >
+    <el-upload :data="dataObj" :multiple="false" :show-file-list="false" :on-success="handleImageSuccess"
+      class="image-uploader" drag action="https://httpbin.org/post">
       <i class="el-icon-upload" />
       <div class="el-upload__text">
         将文件拖到此处，或<em>点击上传</em>
       </div>
     </el-upload>
-    <div class="image-preview image-app-preview">
-      <div
-        v-show="imageUrl.length>1"
-        class="image-preview-wrapper"
-      >
+    <!-- <div class="image-preview image-app-preview">
+      <div v-show="imageUrl.length > 1" class="image-preview-wrapper">
         <img :src="imageUrl">
         <div class="image-preview-action">
-          <i
-            class="el-icon-delete"
-            @click="rmImage"
-          />
+          <i class="el-icon-delete" @click="rmImage" />
         </div>
       </div>
-    </div>
-    <div class="image-preview">
-      <div
-        v-show="imageUrl.length>1"
-        class="image-preview-wrapper"
-      >
-        <img :src="imageUrl">
+    </div> -->
+    <div class="image-preview" v-show="fileList.length > 0" v-for="(item, index) in fileList" :key="index">
+      <div class="image-preview-wrapper">
+        <img :src="item">
         <div class="image-preview-action">
-          <i
-            class="el-icon-delete"
-            @click="rmImage"
-          />
+          <i class="el-icon-delete" @click="rmImage(index)" />
         </div>
       </div>
     </div>
@@ -52,25 +33,28 @@ import { Component, Prop, Vue } from 'vue-property-decorator'
   name: 'UploadImage'
 })
 export default class extends Vue {
-  @Prop({ default: '' }) private value!: string
+  @Prop({ default: () => [] }) private value!: Array<string>
 
   private tempUrl = ''
   private dataObj = { token: '', key: '' }
 
-  get imageUrl() {
+  get fileList() {
     return this.value
   }
 
-  private emitInput(value: string) {
-    this.$emit('input', value)
+  private emitInput() {
+    console.log(this.fileList)
+    this.$emit('input', this.fileList)
   }
 
-  private rmImage() {
-    this.emitInput('')
+  private rmImage(index: number) {
+    this.fileList.splice(index, 1)
+    this.emitInput()
   }
 
   private handleImageSuccess(res: any) {
-    this.emitInput(res.files.file)
+    this.fileList.push(res.files.file)
+    this.emitInput()
   }
 }
 </script>
@@ -87,12 +71,12 @@ export default class extends Vue {
   }
 
   .image-preview {
-    width: 200px;
-    height: 200px;
+    width: 100px;
+    height: 100px;
     position: relative;
     border: 1px dashed #d9d9d9;
     float: left;
-    margin-left: 50px;
+    margin-left: 25px;
 
     .image-preview-wrapper {
       position: relative;
@@ -124,6 +108,9 @@ export default class extends Vue {
 
       .el-icon-delete {
         font-size: 36px;
+        top: 33px;
+        right: 30px;
+        position: absolute;
       }
     }
 

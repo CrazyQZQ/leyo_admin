@@ -68,13 +68,14 @@ class User extends VuexModule implements IUserState {
     const { data } = await login({ username, password })
     setToken(data.token.access_token)
     this.SET_TOKEN(data.token.access_token)
-    const { userId, authorities, userName, avatar, remark, email } = data.user
+    const { userId, authorities } = data.user
     this.SET_ID(userId)
     this.SET_ROLES(authorities)
-    this.SET_NAME(userName)
-    this.SET_AVATAR(avatar)
-    this.SET_INTRODUCTION(remark)
-    this.SET_EMAIL(email)
+    // this.SET_NAME(userName)
+    // this.SET_AVATAR(avatar)
+    // this.SET_INTRODUCTION(remark)
+    // this.SET_EMAIL(email)
+    this.GetUserInfo()
   }
 
   @Action

@@ -17,7 +17,7 @@ export const typeList = (params: any) =>
  */
 export const typeTree = () =>
   request({
-    url: '/product/type/list',
+    url: '/product/type/tree',
     method: 'get'
   })
 
@@ -38,7 +38,7 @@ export const brandList = (params: any) =>
  */
 export const brandTree = () =>
   request({
-    url: '/product/type/list',
+    url: '/product/brand/tree',
     method: 'get'
   })
 
@@ -73,4 +73,14 @@ export const getSkuList = (params: any) =>
     url: '/product/sku/list',
     method: 'get',
     params
+  })
+
+/**
+ * 查询属性
+ * @returns
+ */
+export const getAttributeList = () =>
+  request({
+    url: '/product/attribute/list',
+    method: 'get'
   })

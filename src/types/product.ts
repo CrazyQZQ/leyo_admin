@@ -43,6 +43,7 @@ export interface Product {
     createTime?: string
     updateBy?: string
     updateTime?: string
+    images?: string[]
     imageUrls?: string[]
     brandId?: number
     brandName?: string
