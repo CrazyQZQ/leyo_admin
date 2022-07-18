@@ -1,12 +1,13 @@
-import request from '@src/request'
+import request from '@/utils/request'
 
 /**
  * 获取订单列表
  * @param params
  */
 export const getOrderList = (params: object) => {
-  return request.get({
+  request({
     url: '/order/list',
+    method: 'get',
     params: params
   })
 }
@@ -15,74 +16,72 @@ export const getOrderList = (params: object) => {
  * 保存订单
  * @param params
  */
-export const saveOrder = (params: object) => {
-  return request.post({
+export const saveOrder = (data: object) =>
+  request({
     url: '/order/saveOrder',
-    data: params,
-    headers: { 'Content-Type': 'application/json' }
+    method: 'post',
+    data
   })
-}
 
 /**
  * 获取购物车列表
  * @returns
  */
-export const getShopingCartItems = (params: object) => {
-  return request.get({
+export const getShopingCartItems = (params: object) =>
+  request({
     url: '/order/cart/list',
+    method: 'get',
     params: params
   })
-}
 
 /**
  * 添加购物车
  * @param params
  */
-export const addCartItem = (params: object) => {
-  return request.put({
+export const addCartItem = (data: object) =>
+  request({
     url: '/order/cart/add',
-    data: params,
-    headers: { 'Content-Type': 'application/json' }
+    method: 'post',
+    data
   })
-}
 
 /**
  * 修改购物车商品数量
  * @param params
  */
-export const updateCartItemNum = (params: object) => {
-  return request.post({
+export const updateCartItemNum = (params: object) =>
+  request({
     url: '/order/cart/update',
-    params: params
+    method: 'post',
+    params
   })
-}
 
 /**
  * 删除购物车商品
  * @param params
  */
-export const deleteCartItem = (params: object) => {
-  return request.delete({
+export const deleteCartItem = (params: object) =>
+  request({
     url: '/order/cart/delete',
-    params: params
+    method: 'delete',
+    params
   })
-}
 
 /**
  * 查询热卖商品
  */
-export const hotSales = () => {
-  return request.get({
-    url: '/order/hotSales'
+export const hotSales = () =>
+  request({
+    url: '/order/hotSales',
+    method: 'get'
   })
-}
 
 /**
  * 查询订单各种状态数量
  */
-export const getStatusCount = (params: object) => {
-  return request.get({
+export const getStatusCount = (params: object) =>
+  request({
     url: '/order/getStatusCount',
-    params: params
+    method: 'get',
+    params
   })
-}
