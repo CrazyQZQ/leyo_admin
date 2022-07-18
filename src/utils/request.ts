@@ -26,13 +26,13 @@ service.interceptors.request.use(
 service.interceptors.response.use(
   (response) => {
     // Some example codes here:
-    // code == 20000: success
-    // code == 50001: invalid access token
-    // code == 50002: already login in other place
-    // code == 50003: access token expired
-    // code == 50004: invalid user (user not exist)
-    // code == 50005: username or password is incorrect
-    // You can change this part for your own usage.
+    // code == 200: success
+    // code == 1000：业务异常
+    // code == 1001：客户端认证失败
+    // code == 1002：用户名或密码错误
+    // code == 1003：不支持的认证模式
+    // code == 1004: token失效、过期
+    // code == 1005：无权限访问
     const res = response.data
     if (res.code !== 200) {
       Message({
@@ -40,7 +40,7 @@ service.interceptors.response.use(
         type: 'error',
         duration: 5 * 1000
       })
-      if (res.code === 50001 || res.code === 50012 || res.code === 50014) {
+      if (res.code === 1004) {
         MessageBox.confirm(
           '你已被登出，可以取消继续留在该页面，或者重新登录',
           '确定登出',
