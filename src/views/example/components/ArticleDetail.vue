@@ -157,7 +157,7 @@
 import { Component, Prop, Vue } from 'vue-property-decorator'
 import { isValidURL } from '@/utils/validate'
 import { getArticle, defaultArticleData } from '@/api/articles'
-import { getUsers } from '@/api/users'
+// import { getUsers } from '@/api/user'
 import { AppModule } from '@/store/modules/app'
 import { TagsViewModule, ITagView } from '@/store/modules/tags-view'
 import MaterialInput from '@/components/MaterialInput/index.vue'
@@ -340,9 +340,9 @@ export default class extends Vue {
   }
 
   private async getRemoteUserList(name: string) {
-    const { data } = await getUsers({ name })
-    if (!data.items) return
-    this.userListOptions = data.items.map((v: any) => v.name)
+    // const { data } = await getUsers({ name })
+    // if (!data.items) return
+    // this.userListOptions = data.items.map((v: any) => v.name)
   }
 }
 </script>

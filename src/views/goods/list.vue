@@ -88,6 +88,7 @@ import { productList, brandTree, getAttributeList } from '@/api/product'
 import { Product, Brand, Attribute } from '@/types/product'
 import Pagination from '@/components/Pagination/index.vue'
 import UploadImage from '@/components/UploadImage/index.vue'
+import { Form as ElForm } from 'element-ui'
 
 @Component({
   name: 'ArticleList',
@@ -184,8 +185,7 @@ export default class extends Vue {
   }
 
   submit() {
-    console.log(this.productForm)
-    this.$refs.productForm.validate((valid: any) => {
+    (this.$refs.productForm as ElForm).validate((valid: any) => {
       if (valid) {
         alert('submit!')
       } else {

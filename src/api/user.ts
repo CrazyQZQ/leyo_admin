@@ -21,8 +21,8 @@ export const login = (data: any) =>
  */
 export const logout = () =>
   request({
-    url: '/users/logout',
-    method: 'post'
+    url: '/system/logout',
+    method: 'get'
   })
 
 /**
