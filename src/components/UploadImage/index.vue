@@ -1,7 +1,7 @@
 <template>
   <div class="upload-container">
     <el-upload :data="dataObj" :multiple="false" :show-file-list="false" :on-success="handleImageSuccess"
-      class="image-uploader" drag action="https://httpbin.org/post">
+      class="image-uploader" drag action="http://117.50.187.26:8700/system/file/upload">
       <i class="el-icon-upload" />
       <div class="el-upload__text">
         将文件拖到此处，或<em>点击上传</em>
@@ -53,8 +53,9 @@ export default class extends Vue {
   }
 
   private handleImageSuccess(res: any) {
-    this.fileList.push(res.files.file)
-    this.emitInput()
+    console.log(res)
+    // this.fileList.push(res.files.file)
+    // this.emitInput()
   }
 }
 </script>

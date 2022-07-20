@@ -199,7 +199,7 @@ export default class extends Vue {
           path: this.redirect || '/',
           query: this.otherQuery
         }).catch(err => {
-          console.warn(err)
+          console.warn('login-error:', err)
         })
         // Just to simulate the time of the request
         setTimeout(() => {

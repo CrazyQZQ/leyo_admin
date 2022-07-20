@@ -16,7 +16,7 @@ export interface IUserState {
   email: string
 }
 
-@Module({ dynamic: true, store, name: 'user' })
+@Module({ dynamic: true, store, name: 'user', preserveState: localStorage.getItem('vuex') !== null })
 class User extends VuexModule implements IUserState {
   public userId = -1
   public token = getToken() || ''
@@ -68,14 +68,14 @@ class User extends VuexModule implements IUserState {
     const { data } = await login({ username, password })
     setToken(data.token.access_token)
     this.SET_TOKEN(data.token.access_token)
-    const { userId, authorities } = data.user
+    const { userId, authorities, userName, avatar, remark, email } = data.user
     this.SET_ID(userId)
     this.SET_ROLES(authorities)
-    // this.SET_NAME(userName)
-    // this.SET_AVATAR(avatar)
-    // this.SET_INTRODUCTION(remark)
-    // this.SET_EMAIL(email)
-    this.GetUserInfo()
+    this.SET_NAME(userName)
+    this.SET_AVATAR(avatar)
+    this.SET_INTRODUCTION(remark)
+    this.SET_EMAIL(email)
+    // this.GetUserInfo()
   }
 
   @Action
@@ -90,17 +90,17 @@ class User extends VuexModule implements IUserState {
     if (this.token === '') {
       throw Error('GetUserInfo: token is undefined!')
     }
-    console.log('this.userId', this)
-    const { data } = await getUserInfo({ id: 1 })
+    console.log('this.userId', this.userId)
+    const { data } = await getUserInfo({ id: this.userId })
     if (!data) {
       throw Error('Verification failed, please Login again.')
     }
-    const { userName, avatar, remark, email } = data
+    const { authorities, userName, avatar, remark, email } = data
     // roles must be a non-empty array
     // if (!roles || roles.length <= 0) {
     //   throw Error('GetUserInfo: roles must be a non-null array!')
     // }
-    this.SET_ROLES(['admin'])
+    this.SET_ROLES(authorities)
     this.SET_NAME(userName)
     this.SET_AVATAR(avatar)
     this.SET_INTRODUCTION(remark)

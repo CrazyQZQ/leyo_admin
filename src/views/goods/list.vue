@@ -155,9 +155,9 @@ export default class extends Vue {
   // 获取列表
   private async getList() {
     this.listLoading = true
-    const { rows, total } = await productList(this.listQuery)
-    this.list = rows
-    this.total = total
+    const { data } = await productList(this.listQuery)
+    this.list = data.rows
+    this.total = data.total
     // Just to simulate the time of the request
     setTimeout(() => {
       this.listLoading = false

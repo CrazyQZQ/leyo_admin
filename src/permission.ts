@@ -24,7 +24,8 @@ const getPageTitle = (key: string) => {
 router.beforeEach(async(to: Route, _: Route, next: any) => {
   // Start progress bar
   NProgress.start()
-  console.log(UserModule)
+  console.log('token', UserModule.token)
+  console.log('roles', UserModule.roles)
   // Determine whether the user has logged in
   if (UserModule.token) {
     if (to.path === '/login') {

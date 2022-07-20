@@ -4,13 +4,12 @@ import request from '@/utils/request'
  * 获取订单列表
  * @param params
  */
-export const getOrderList = (params: object) => {
+export const getOrderList = (params: object) =>
   request({
     url: '/order/list',
     method: 'get',
     params: params
   })
-}
 
 /**
  * 保存订单
