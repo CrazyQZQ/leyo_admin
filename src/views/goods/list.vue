@@ -84,11 +84,11 @@
 
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator'
-import { productList, brandTree, getAttributeList } from '@/api/product'
+import { productList, brandTree, getAttributeList, addProduct, updateProduct } from '@/api/product'
 import { Product, Brand, Attribute } from '@/types/product'
 import Pagination from '@/components/Pagination/index.vue'
 import UploadImage from '@/components/UploadImage/index.vue'
-import { Form as ElForm } from 'element-ui'
+import { Form as ElForm, Message } from 'element-ui'
 
 @Component({
   name: 'ArticleList',
@@ -165,7 +165,7 @@ export default class extends Vue {
   }
 
   // 编辑
-  private async preEdit(row: Product) {
+  private preEdit(row: Product) {
     this.formTitle = '新增商品'
     if (row) {
       this.productForm = row
@@ -176,7 +176,6 @@ export default class extends Vue {
 
   getBrand(data: Array<number>) {
     this.productForm.brandId = data[data.length - 1]
-    console.log(this.productForm.brandId)
   }
 
   cancel() {
@@ -184,12 +183,19 @@ export default class extends Vue {
     this.productForm = {}
   }
 
-  submit() {
-    (this.$refs.productForm as ElForm).validate((valid: any) => {
+  async submit() {
+    (this.$refs.productForm as ElForm).validate(async(valid: any) => {
       if (valid) {
-        alert('submit!')
+        // alert('submit!')
+        if (this.productForm.id) {
+          const res = await updateProduct(this.productForm)
+          console.log(res)
+        } else {
+          const res = await addProduct(this.productForm)
+          console.log(res)
+        }
       } else {
-        console.log('error submit!!')
+        Message.error('请正确填写商品信息')
         return false
       }
     })

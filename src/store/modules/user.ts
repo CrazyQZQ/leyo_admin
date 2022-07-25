@@ -16,7 +16,7 @@ export interface IUserState {
   email: string
 }
 
-@Module({ dynamic: true, store, name: 'user', preserveState: localStorage.getItem('vuex') !== null })
+@Module({ dynamic: true, store, name: 'user' })
 class User extends VuexModule implements IUserState {
   public userId = -1
   public token = getToken() || ''
