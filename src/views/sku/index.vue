@@ -44,7 +44,7 @@
       </el-table-column>
       <el-table-column label="规格属性">
         <template slot-scope="{row}">
-          <el-tag v-for="(iten, index) in row.skuAttributes" :key="index">
+          <el-tag v-for="(item, index) in row.skuAttributes" :key="index">
             <em>{{item.name}}：</em>{{item.value}}
           </el-tag>
         </template>

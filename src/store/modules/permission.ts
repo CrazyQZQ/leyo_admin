@@ -41,7 +41,7 @@ class Permission extends VuexModule implements IPermissionState {
     this.dynamicRoutes = routes
   }
 
-  @Action
+  @Action({ rawError: true })
   public GenerateRoutes(roles: string[]) {
     let accessedRoutes
     if (roles.includes('admin')) {

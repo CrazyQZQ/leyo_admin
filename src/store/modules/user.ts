@@ -60,7 +60,7 @@ class User extends VuexModule implements IUserState {
     this.email = email
   }
 
-  @Action
+  @Action({ rawError: true })
   public async Login(userInfo: { username: string, password: string}) {
     let { username, password } = userInfo
     username = username.trim()
@@ -76,13 +76,13 @@ class User extends VuexModule implements IUserState {
     // this.GetUserInfo()
   }
 
-  @Action
+  @Action({ rawError: true })
   public ResetToken() {
     this.SET_TOKEN('')
     this.SET_ROLES([])
   }
 
-  @Action
+  @Action({ rawError: true })
   public async GetUserInfo() {
     if (this.token === '') {
       throw Error('GetUserInfo: token is undefined!')
@@ -104,7 +104,7 @@ class User extends VuexModule implements IUserState {
     this.SET_EMAIL(email)
   }
 
-  @Action
+  @Action({ rawError: true })
   public async ChangeRoles(role: string) {
     // Dynamically modify permissions
     const token = role + '-token'
@@ -121,7 +121,7 @@ class User extends VuexModule implements IUserState {
     TagsViewModule.delAllViews()
   }
 
-  @Action
+  @Action({ rawError: true })
   public async LogOut() {
     if (this.token === '') {
       throw Error('LogOut: token is undefined!')
