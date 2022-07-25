@@ -17,14 +17,14 @@ export interface Attribute {
 }
 
 export interface Sku {
-    id?: number
-    productId?: number
+    id: number
+    productId: number
     spec?: string
     price?: number
     originalPrice?: number
     stock?: number
     sales?: number
-    imageUrl?: string
+    imageUrl: string
     productName?: string
     brandName?: string
     typeName?: string
@@ -34,8 +34,8 @@ export interface Sku {
 // 商品
 export interface Product {
     id?: number
-    code?: string
-    name?: string
+    code: string
+    name: string
     unit?: string
     price?: number
     stock?: number
@@ -45,8 +45,10 @@ export interface Product {
     updateTime?: string
     images?: string[]
     imageUrls?: string[]
-    brandId?: number
-    brandName?: string
+    typeId: number
+    typeName: string
+    brandId: number
+    brandName: string
     skus?: Sku[]
     attributes?: Attribute[]
 }
@@ -65,16 +67,17 @@ export interface ProductType {
 }
 
 export interface Brand {
-    id?: number
-    parentId?: number
+    id: number
+    parentId: number
     name: string
-    typeId?: number
+    typeId: number
     orderNum?: number
     createBy?: string
     createTime?: string
     updateBy?: string
     updateTime?: null
     imageUrls: string[]
+    children?: Brand[]
 }
 
 export interface ShoppingCartItem {

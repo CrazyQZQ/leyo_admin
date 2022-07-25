@@ -456,6 +456,26 @@ export const asyncRoutes: RouteConfig[] = [
         }
       }
     ]
+  },
+  {
+    path: '/sku',
+    component: Layout,
+    redirect: '/sku/list',
+    meta: {
+      title: 'sku',
+      icon: 'example'
+    },
+    children: [
+      {
+        path: 'list',
+        component: () => import(/* webpackChunkName: "example-list" */ '@/views/sku/index.vue'),
+        name: 'SkuList',
+        meta: {
+          title: 'skuList',
+          icon: 'list'
+        }
+      }
+    ]
   }
 ]
 

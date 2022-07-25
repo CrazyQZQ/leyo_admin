@@ -33,6 +33,7 @@ service.interceptors.response.use(
     // code == 1003：不支持的认证模式
     // code == 1004: token失效、过期
     // code == 1005：无权限访问
+    console.log(response)
     const res = response.data
     if (res.code !== 200) {
       Message({

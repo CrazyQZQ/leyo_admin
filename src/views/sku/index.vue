@@ -6,50 +6,49 @@
           <span>{{ row.id }}</span>
         </template>
       </el-table-column>
-
-      <el-table-column width="180px" align="center" label="名称">
+      <el-table-column width="180px" align="center" label="商品名称">
         <template slot-scope="{row}">
-          <span>{{ row.name }}</span>
+          <span>{{ row.productName }}</span>
         </template>
       </el-table-column>
-
       <el-table-column width="180px" align="center" label="品类">
         <template slot-scope="{row}">
           <span>{{ row.typeName }}</span>
         </template>
       </el-table-column>
-
       <el-table-column width="180px" align="center" label="品牌">
         <template slot-scope="{row}">
           <span>{{ row.brandName }}</span>
         </template>
       </el-table-column>
-
       <el-table-column width="71px" label="图片">
         <template slot-scope="{row}">
-          <el-image style="width: 30px; height: 30px" :src="row.imageUrls[0]" :preview-src-list="row.imageUrls"
+          <el-image style="width: 50px; height: 50px" :src="row.imageUrl" :preview-src-list="[row.imageUrl]"
             fit="fill"></el-image>
         </template>
       </el-table-column>
-
       <el-table-column class-name="status-col" label="单价">
         <template slot-scope="{row}">
           <span>{{ row.price }}</span>
         </template>
       </el-table-column>
-
       <el-table-column class-name="status-col" label="单位">
         <template slot-scope="{row}">
           <span>{{ row.unit }}</span>
         </template>
       </el-table-column>
-
       <el-table-column label="库存">
         <template slot-scope="{row}">
           <span>{{ row.stock }}</span>
         </template>
       </el-table-column>
-
+      <el-table-column label="规格属性">
+        <template slot-scope="{row}">
+          <el-tag v-for="(iten, index) in row.skuAttributes" :key="index">
+            <em>{{item.name}}：</em>{{item.value}}
+          </el-tag>
+        </template>
+      </el-table-column>
       <el-table-column align="center" label="Actions" width="120">
         <template slot-scope="{row}">
           <el-button type="primary" icon="el-icon-plus" circle @click="preEdit()"></el-button>
@@ -99,8 +98,8 @@
 
 <script lang="ts">
 import { Component, Vue, Watch } from 'vue-property-decorator'
-import { productList, brandTree, getAttributeList, addProduct, updateProduct } from '@/api/product'
-import { Product, Brand, Attribute } from '@/types/product'
+import { getSkuList, brandTree, getAttributeList, addProduct, updateProduct } from '@/api/product'
+import { Product, Brand, Attribute, Sku } from '@/types/product'
 import Pagination from '@/components/Pagination/index.vue'
 import UploadImage from '@/components/UploadImage/index.vue'
 import { Form as ElForm, Message } from 'element-ui'
@@ -114,7 +113,7 @@ import { Form as ElForm, Message } from 'element-ui'
 })
 export default class extends Vue {
   private total = 0
-  private list: Product[] = []
+  private list: Sku[] = []
   private listLoading = true
   private dialogFormVisible = false
   private formTitle = ''
@@ -192,7 +191,7 @@ export default class extends Vue {
   // 获取列表
   private async getList() {
     this.listLoading = true
-    const { data } = await productList(this.listQuery)
+    const { data } = await getSkuList(this.listQuery)
     this.list = data.rows
     this.total = data.total
     // Just to simulate the time of the request

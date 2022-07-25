@@ -1,6 +1,5 @@
 import { VuexModule, Module, Action, Mutation, getModule } from 'vuex-module-decorators'
 import { login, logout, getUserInfo } from '@/api/user'
-import { getToken, setToken, removeToken } from '@/utils/cookies'
 import router, { resetRouter } from '@/router'
 import { PermissionModule } from './permission'
 import { TagsViewModule } from './tags-view'
@@ -16,10 +15,10 @@ export interface IUserState {
   email: string
 }
 
-@Module({ dynamic: true, store, name: 'user' })
+@Module({ dynamic: true, store, name: 'user', preserveState: localStorage.getItem('vuex') !== null })
 class User extends VuexModule implements IUserState {
   public userId = -1
-  public token = getToken() || ''
+  public token = ''
   public name = ''
   public avatar = ''
   public introduction = ''
@@ -66,21 +65,19 @@ class User extends VuexModule implements IUserState {
     let { username, password } = userInfo
     username = username.trim()
     const { data } = await login({ username, password })
-    setToken(data.token.access_token)
     this.SET_TOKEN(data.token.access_token)
-    const { userId, authorities, userName, avatar, remark, email } = data.user
+    const { userId } = data.user
     this.SET_ID(userId)
-    this.SET_ROLES(authorities)
-    this.SET_NAME(userName)
-    this.SET_AVATAR(avatar)
-    this.SET_INTRODUCTION(remark)
-    this.SET_EMAIL(email)
+    // this.SET_ROLES(authorities)
+    // this.SET_NAME(userName)
+    // this.SET_AVATAR(avatar)
+    // this.SET_INTRODUCTION(remark)
+    // this.SET_EMAIL(email)
     // this.GetUserInfo()
   }
 
   @Action
   public ResetToken() {
-    removeToken()
     this.SET_TOKEN('')
     this.SET_ROLES([])
   }
@@ -112,7 +109,6 @@ class User extends VuexModule implements IUserState {
     // Dynamically modify permissions
     const token = role + '-token'
     this.SET_TOKEN(token)
-    setToken(token)
     await this.GetUserInfo()
     resetRouter()
     // Generate dynamic accessible routes based on roles
@@ -131,7 +127,6 @@ class User extends VuexModule implements IUserState {
       throw Error('LogOut: token is undefined!')
     }
     await logout()
-    removeToken()
     resetRouter()
 
     // Reset visited views and cached views

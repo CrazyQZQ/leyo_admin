@@ -1,20 +1,12 @@
 <template>
   <div class="upload-container">
-    <el-upload :data="dataObj" :multiple="false" :show-file-list="false" :on-success="handleImageSuccess"
+    <el-upload :headers="headers" :multiple="false" :show-file-list="false" :on-success="handleImageSuccess"
       class="image-uploader" drag action="http://117.50.187.26:8700/system/file/upload">
       <i class="el-icon-upload" />
       <div class="el-upload__text">
         将文件拖到此处，或<em>点击上传</em>
       </div>
     </el-upload>
-    <!-- <div class="image-preview image-app-preview">
-      <div v-show="imageUrl.length > 1" class="image-preview-wrapper">
-        <img :src="imageUrl">
-        <div class="image-preview-action">
-          <i class="el-icon-delete" @click="rmImage" />
-        </div>
-      </div>
-    </div> -->
     <div class="image-preview" v-show="fileList.length > 0" v-for="(item, index) in fileList" :key="index">
       <div class="image-preview-wrapper">
         <img :src="item">
@@ -28,6 +20,9 @@
 
 <script lang="ts">
 import { Component, Prop, Vue } from 'vue-property-decorator'
+import { UserModule } from '@/store/modules/user'
+import { deleteFile } from '@/api/file'
+import { Message } from 'element-ui'
 
 @Component({
   name: 'UploadImage'
@@ -36,7 +31,7 @@ export default class extends Vue {
   @Prop({ default: () => [] }) private value!: Array<string>
 
   private tempUrl = ''
-  private dataObj = { token: '', key: '' }
+  private headers = { Authorization: 'Bearer ' + UserModule.token }
 
   get fileList() {
     return this.value
@@ -48,14 +43,25 @@ export default class extends Vue {
   }
 
   private rmImage(index: number) {
+    const deleteUrl = this.fileList[index]
+    console.log('deleteUrl', deleteUrl)
+    deleteFile([deleteUrl])
     this.fileList.splice(index, 1)
     this.emitInput()
   }
 
   private handleImageSuccess(res: any) {
     console.log(res)
-    // this.fileList.push(res.files.file)
-    // this.emitInput()
+    if (res && res.code === 200) {
+      this.fileList.push(res.data)
+      this.emitInput()
+    } else {
+      Message({
+        message: '图片上传出错！',
+        type: 'error',
+        duration: 5 * 1000
+      })
+    }
   }
 }
 </script>
@@ -67,7 +73,7 @@ export default class extends Vue {
   @include clearfix;
 
   .image-uploader {
-    width: 35%;
+    width: 45%;
     float: left;
   }
 
