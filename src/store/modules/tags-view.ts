@@ -11,7 +11,7 @@ export interface ITagsViewState {
   cachedViews: (string | undefined)[]
 }
 
-@Module({ dynamic: true, store, name: 'tagsView' })
+@Module({ dynamic: true, store, name: 'tagsView', preserveState: localStorage.getItem('vuex') !== null })
 class TagsView extends VuexModule implements ITagsViewState {
   public visitedViews: ITagView[] = []
   public cachedViews: (string | undefined)[] = []

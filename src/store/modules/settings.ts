@@ -12,7 +12,7 @@ export interface ISettingsState {
   sidebarTextTheme: boolean
 }
 
-@Module({ dynamic: true, store, name: 'settings' })
+@Module({ dynamic: true, store, name: 'settings', preserveState: localStorage.getItem('vuex') !== null })
 class Settings extends VuexModule implements ISettingsState {
   public theme = elementVariables.theme
   public fixedHeader = defaultSettings.fixedHeader

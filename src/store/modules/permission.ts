@@ -30,7 +30,7 @@ export interface IPermissionState {
   dynamicRoutes: RouteConfig[]
 }
 
-@Module({ dynamic: true, store, name: 'permission' })
+@Module({ dynamic: true, store, name: 'permission', preserveState: localStorage.getItem('vuex') !== null })
 class Permission extends VuexModule implements IPermissionState {
   public routes: RouteConfig[] = []
   public dynamicRoutes: RouteConfig[] = []

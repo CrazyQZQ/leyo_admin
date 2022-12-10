@@ -12,7 +12,7 @@ export interface IErrorLogState {
   logs: IErrorLog[]
 }
 
-@Module({ dynamic: true, store, name: 'errorLog' })
+@Module({ dynamic: true, store, name: 'errorLog', preserveState: localStorage.getItem('vuex') !== null })
 class ErrorLog extends VuexModule implements IErrorLogState {
   public logs: IErrorLog[] = []
 
